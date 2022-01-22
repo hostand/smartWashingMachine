@@ -1,0 +1,110 @@
+- id: washingmachine_switchedoff
+  alias: Washing Machine - Change State Switched Off
+  trigger:
+  - platform: state
+    entity_id: switch.lt_lava_roupa
+    to: 'off'
+  action:
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.state_washingmachine
+      option: Switched Off
+- id: washingmachine_powereddown
+  alias: Washing Machine - Change State Powered Down
+  trigger:
+  - platform: state
+    entity_id: switch.lt_lava_roupa
+    to: 'on'
+  - platform: numeric_state
+    entity_id: sensor.washingmachine_powerdraw
+    below: 1
+    for: 00:01:00
+  condition:
+  - condition: state
+    entity_id: switch.lt_lava_roupa
+    state: 'on'
+  action:
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.state_washingmachine
+      option: Powered Down
+- id: washingmachine_idle
+  alias: Washing Machine - Change State Idle
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.washingmachine_powerdraw
+    above: 1
+    below: 4
+    for: 00:01:00
+  condition:
+  - condition: state
+    entity_id: switch.lt_lava_roupa
+    state: 'on'
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: input_select.state_washingmachine
+      state: Powered Down
+    - condition: state
+      entity_id: input_select.state_washingmachine
+      state: Rinse / Spin
+  action:
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.state_washingmachine
+      option: Idle
+- id: washingmachine_rinsespin
+  alias: Washing Machine - Change State Rinse Spin
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.washingmachine_powerdraw
+    above: 10
+    below: 550
+    for: 00:01:00
+  condition:
+  - condition: state
+    entity_id: switch.lt_lava_roupa
+    state: 'on'
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: input_select.state_washingmachine
+      state: Powered Down
+    - condition: state
+      entity_id: input_select.state_washingmachine
+      state: Idle
+    - condition: state
+      entity_id: input_select.state_washingmachine
+      state: Wash
+  action:
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.state_washingmachine
+      option: Rinse / Spin
+- id: washingmachine_wash
+  alias: Washing Machine - Change State Wash
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.washingmachine_powerdraw
+    above: 1000
+    for: 00:01:00
+  condition:
+  - condition: state
+    entity_id: switch.lt_lava_roupa
+    state: 'on'
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: input_select.state_washingmachine
+      state: Powered Down
+    - condition: state
+      entity_id: input_select.state_washingmachine
+      state: Idle
+    - condition: state
+      entity_id: input_select.state_washingmachine
+      state: Rinse / Spin
+  action:
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.state_washingmachine
+      option: Wash
