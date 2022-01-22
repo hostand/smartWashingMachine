@@ -70,5 +70,5 @@ input_select:
       - Wash
     icon: mdi:washing-machine
 ```
-
+So the automations code I've found on this [post](https://community.home-assistant.io/t/washing-machine-power-consumption-trigger/70938/6) from home assistant forums. Thanks user [Callifo](https://community.home-assistant.io/u/callifo) :+1:. Based on your power draw measurement the automations will set the state of your washing machine. Just edit the automations with your washing machine state id and the behaviour of your machine.
 
