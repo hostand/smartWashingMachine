@@ -19,8 +19,35 @@ What do I need?
   - [Card-mod](https://github.com/thomasloven/lovelace-card-mod) - to create our fancy button on lovelace dashboard
   - [Custom Button Card](https://github.com/custom-cards/button-card) - to create our fancy button on lovelace dashboard
 
-First of all, I will consider that you already added your smart plug as a switch under the Local Tuya Integration. If you don't know how to do it, I recommend this [video](https://www.youtube.com/watch?v=vq2L9c5hDfQ). On my setup the entity id is **switch.lt_lava_roupa** - see the entity properties on developer tools (image below)
+## Initial Steps
 
-![lava_roupa_entity](entity.jpg)
+First of all, I will consider that you _already_ added your smart plug as a switch under the Local Tuya Integration. If you don't know how to do it, I recommend this [video](https://www.youtube.com/watch?v=vq2L9c5hDfQ). As I said, the official Tuya integration doesn't provide the information we need (until the day I'm writing it) and Local Tuya is awesome since it don't rely on Tuya Cloud. So, on my setup the entity id is **switch.lt_lava_roupa** - see the power monitoring entity attributes on developer tools (image below)
+
+![lava_roupa_entity](entity.JPG)
+
+- current
+- current consumption
+- voltage
+
+Create the entities from the attributes adding this code to you **configuration.yaml** (or wherever you put it on your home assistant files)
+
+```yaml
+ - platform: template
+   sensors:
+      washingmachine_powerdraw:
+        value_template: '{{ state_attr("switch.lt_lava_roupa", "current_consumption") }}'
+        unit_of_measurement: 'W'
+      washingmachine_current:
+        value_template: '{{ state_attr("switch.lt_lava_roupa", "current") }}'
+        unit_of_measurement: 'mA'
+      washingmachine_voltage:
+        value_template: '{{ state_attr("switch.lt_lava_roupa", "voltage") }}'
+        unit_of_measurement: 'V'
+```
+
+
+## Staring my washing machine and Tuya/SmartLife app
+
+Yes, now it's time to study your washing machine behaviour. (By the way, you can use this approach in order to transform other dumb devices into smart just analyzing the power consumption). Open you SmartLife/Tuya app (I use SmartLife) - select your smart plug and under **Electric** option you will see this: 
 
 
