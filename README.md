@@ -72,3 +72,13 @@ input_select:
 ```
 So the automations code I've found on this [post](https://community.home-assistant.io/t/washing-machine-power-consumption-trigger/70938/6) from home assistant forums. Thanks user [Callifo](https://community.home-assistant.io/u/callifo) :+1:. Based on your power draw measurement the automations will set the state of your washing machine. Just edit the automations with your washing machine state id and the behaviour of your machine.
 
+Download and open the [automations.yaml](automations.yaml) file on this project to check it and past the contents into your automations.yaml file on Home Assistant. Remember to change the entity id of your power plug (on this code there is the id of mine power plug). Repeating you can customize the automations accordingly your washing machine behaviour during the power variations and set the states properly.
+
+So, right after this step you can use the _service: input_select.select_option_ to play with states changes of **input_select.state_washingmachine** entity on developer tools or start some cleaning program on your washing machine and see if it's behaviour fits the states you set on automations.
+
+:warning: You need to add your own code to send notifications when the machine finish the job on **Washing Machine - Change State Powered Down** automation.
+
+## Time Elapsed feature
+
+In order to make more cool features I added a counter to calculate the time elapsed from the moment the washing machine is powered on and starts washing until it's powered down. Unlike on washing machines that the time set by cleaning program will decrease (since its not possible to know what program you set on machine) - I created this time count thar starts from 00:00 and go.
+
