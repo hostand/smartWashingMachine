@@ -46,8 +46,29 @@ Create the entities from the attributes adding this code to you **configuration.
 ```
 
 
-## Staring my washing machine and Tuya/SmartLife app
+## Staring your washing machine and Tuya/SmartLife app
 
 Yes, now it's time to study your washing machine behaviour. (By the way, you can use this approach in order to transform other dumb devices into smart just analyzing the power consumption). Open you SmartLife/Tuya app (I use SmartLife) - select your smart plug and under **Electric** option you will see this: 
+
+![electric](electric.jpg)
+
+The important measurement is the **_Power_** in W (current consumption)! Now you will set some washing program on your machine, stare it and make notes about the consumption/action behaviour. In my case during the Washing the power value is above 2000 but during Rinse its just 300. Make note about every change to make the more accurate automations. 
+
+## Washing Machine state and automations
+
+Now we need to create an input_select entity to keep the washing machine state. You can add as many states you want in the options depending on your machine and how accurate were the power variations that define your machine's actions. So, go to your **configuration.yaml** and add the code below.
+
+```yaml
+input_select:
+  state_washingmachine:
+    name: Washing Machine state
+    options:
+      - Switched Off 
+      - Powered Down
+      - Idle
+      - Rinse / Spin
+      - Wash
+    icon: mdi:washing-machine
+```
 
 
