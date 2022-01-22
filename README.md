@@ -52,7 +52,7 @@ Yes, now it's time to study your washing machine behaviour. (By the way, you can
 
 ![electric](electric.jpg)
 
-The important measurement is the **_Power_** in W (current consumption)! Now you will set some washing program on your machine, stare it and make notes about the consumption/action behaviour. In my case during the Washing the power value is above 2000 but during Rinse its just 300. Make note about every change to make the more accurate automations. 
+The important measurement is the **_Power_** in W (current consumption)! Now you will set some washing program on your machine, stare it and make notes about the consumption/action behaviour. In my case during the Washing the power value is above 1000 but during Rinse its just 500. Make note about every change to make the more accurate automations. 
 
 ## Washing Machine state and automations
 
@@ -72,13 +72,79 @@ input_select:
 ```
 So the automations code I've found on this [post](https://community.home-assistant.io/t/washing-machine-power-consumption-trigger/70938/6) from home assistant forums. Thanks user [Callifo](https://community.home-assistant.io/u/callifo) :+1:. Based on your power draw measurement the automations will set the state of your washing machine. Just edit the automations with your washing machine state id and the behaviour of your machine.
 
-Download and open the [automations.yaml](automations.yaml) file on this project to check it and past the contents into your automations.yaml file on Home Assistant. Remember to change the entity id of your power plug (on this code there is the id of mine power plug). Repeating you can customize the automations accordingly your washing machine behaviour during the power variations and set the states properly.
+Download and open the [automations.yaml](automations.yaml) file on this project to check it and past the contents into your automations.yaml file on Home Assistant. Remember to change the entity id of your power plug (on this code there is the id of mine power plug). _Repeating, you can customize_ the automations accordingly your washing machine behaviour during the power variations and set the states properly.
 
 So, right after this step you can use the _service: input_select.select_option_ to play with states changes of **input_select.state_washingmachine** entity on developer tools or start some cleaning program on your washing machine and see if it's behaviour fits the states you set on automations.
 
 :warning: You need to add your own code to send notifications when the machine finish the job on **Washing Machine - Change State Powered Down** automation.
 
-## Time Elapsed feature
+## Washing Machine job time elapsed feature
 
 In order to make more cool features I added a counter to calculate the time elapsed from the moment the washing machine is powered on and starts washing until it's powered down. Unlike on washing machines that the time set by cleaning program will decrease (since its not possible to know what program you set on machine) - I created this time count thar starts from 00:00 and go.
+
+Create a counter entity by adding this code to your *configuration.yaml*
+```yaml
+counter:
+  wash_duration:
+    initial: 0
+    step: 1
+```
+Add the code below to your *automations.yaml* file. It will increment 1 second to the counter wash_duration from the moment the machine is powered up. Also the reset automation will reset the counter to 0 when machine is powered down (no current consumption) or switched off (on smart plug).
+
+```yaml
+- id: washingmachine_startcounter
+  alias: Counter Washing Machine Start
+  trigger:
+  - platform: time_pattern
+    seconds: /1
+  condition:
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: input_select.state_washingmachine
+      state: Powered Down
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: input_select.state_washingmachine
+        state: Switched Off
+  action:
+  - service: counter.increment
+    target:
+      entity_id: counter.wash_duration
+  mode: restart
+- id: washingmachine_resetcounter
+  alias: Counter Washing Machine Reset
+  trigger:
+  - platform: state
+    entity_id: input_select.state_washingmachine
+    to: Powered Down
+  - platform: state
+    entity_id: input_select.state_washingmachine
+    to: Switched Off
+  condition: []
+  action:
+  - service: counter.reset
+    target:
+      entity_id: counter.wash_duration
+  mode: single
+```
+
+Back to *configuration.yaml* again on sensor templating add the code below. This sensor will record the time elapsed to be show on your dashboard.
+
+```yaml
+ - platform: template
+   sensors:
+      wash_running_time:
+        value_template: >
+         {%- set time = states('counter.wash_duration') | int -%}
+         {%- set seconds = (time % 60) | int -%}
+         {%- set minutes = ((time % 3600) / 60) | int -%}
+         {%- set hours = ((time % 86400) / 3600) | int -%}
+         {% if time == 0 %}
+         00:00
+         {% else %}
+         {{ '{:02}:{:02}'.format(hours, minutes) }}
+         {% endif %} 
+```
 
