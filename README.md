@@ -19,6 +19,8 @@ What do I need?
   - [Card-mod](https://github.com/thomasloven/lovelace-card-mod) - to create our fancy button on lovelace dashboard
   - [Custom Button Card](https://github.com/custom-cards/button-card) - to create our fancy button on lovelace dashboard
 
-First of all, I will consider that you already added your smart plug as a switch under the Local Tuya Integration. If you don't know how to do it, I recommend this [video](https://www.youtube.com/watch?v=vq2L9c5hDfQ). On my setup the entity id is **switch.lt_lava_roupa**
+First of all, I will consider that you already added your smart plug as a switch under the Local Tuya Integration. If you don't know how to do it, I recommend this [video](https://www.youtube.com/watch?v=vq2L9c5hDfQ). On my setup the entity id is **switch.lt_lava_roupa** - see the entity properties on developer tools (image below)
+
+![lava_roupa_entity](entity.jpg)
 
 
