@@ -89,7 +89,7 @@ counter:
     initial: 0
     step: 1
 ```
-Add the code below to your *automations.yaml* file. It will increment 1 second to the counter wash_duration from the moment the machine is powered up. Also the reset automation will reset the counter to 0 when machine is powered down (no current consumption) or switched off (on smart plug).
+Add the code below to your *automations.yaml* file. It will increment 1 second to the counter wash_duration from the moment the machine has any state that is not Powered Down or Switched Off. Also the reset automation will reset the counter to 0 when machine is powered down (no current consumption) or switched off (on smart plug).
 
 ```yaml
 - id: washingmachine_startcounter
@@ -147,4 +147,59 @@ Back to *configuration.yaml* again on sensor templating add the code below. This
          {{ '{:02}:{:02}'.format(hours, minutes) }}
          {% endif %} 
 ```
+## Lovelace Dashboard Button
 
+Since you have card-mod and button-card lovelace frontend integrations installed you can create the button to show information about the washing machine on your dashboard. Remember that the styles like card size, position and others were made to fit my personal dashboard. Change it accordingly yours:
+
+```yaml
+	type: custom:button-card
+        color_type: auto
+        entity: input_select.state_washingmachine
+        name: Washing Machine
+        show_state: true
+        show_label: true
+        label: >-
+          [[[ if (entity.state == "Powered Down" || entity.state == "Switched
+          Off") return ""; else return
+          states["sensor.wash_running_time"].state;]]]
+        icon: mdi:washing-machine
+        styles:
+          card:
+            - height: 100px
+            - width: 124px
+            - background-color: |
+                [[[
+                  if (entity.state == 'Wash' || entity.state == 'Idle' || entity.state == 'Rinse / Spin') return 'rgba(46, 138, 197, 0.3)';
+                  else return '';
+                ]]]
+          grid:
+            - grid-template-areas: '"i" "n" "s" "l"'
+            - grid-template-columns: 1fr
+            - grid-template-rows: 1fr min-content
+          img_cell:
+            - align-self: start
+            - text-align: start
+          name:
+            - justify-self: start
+            - padding-left: 10px
+            - font-size: 15px
+          label:
+            - justify-self: end
+            - font-size: 15px
+            - margin-top: '-150px'
+            - margin-right: 10px
+          state:
+            - justify-self: start
+            - padding-left: 10px
+            - font-size: 15px
+            - margin-bottom: 4px
+          icon:
+            - width: 31px
+            - color: white
+            - margin-left: '-80px'
+            - margin-top: '-3px'
+            - animation: |
+                [[[
+                  if (entity.state == 'Wash' || entity.state == 'Rinse / Spin') return 'blink 2s ease infinite';
+                ]]]
+```
