@@ -205,3 +205,5 @@ Since you have card-mod and button-card lovelace frontend integrations installed
                   if (entity.state == 'Wash' || entity.state == 'Rinse / Spin') return 'blink 2s ease infinite';
                 ]]]
 ```
+
+So, thats it! If you like it just add me here and give some ⭐ to this project.
