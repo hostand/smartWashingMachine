@@ -149,7 +149,9 @@ Back to *configuration.yaml* again on sensor templating add the code below. This
 ```
 ## Lovelace Dashboard Button
 
-Since you have card-mod and button-card lovelace frontend integrations installed you can create the button to show information about the washing machine on your dashboard. Remember that the styles like card size, position and others were made to fit my personal dashboard. Change it accordingly yours:
+Since you have card-mod and button-card lovelace frontend integrations installed you can create the button to show information about the washing machine on your dashboard. Remember that the styles like card size, position and others were made to fit my personal dashboard. As you can see in the code the background color of the button card changes according the state, the icon blinks according to some states and the counter appears on label when the machine is not switched off or powered down. You can change the label to show the current consumption (W) by using the state of _states["sensor.washingmachine_powerdraw"].state;_. Remeber to change the code accordingly yours environment and entities ids:
+
+![button](button.gif)
 
 ```yaml
         type: custom:button-card
