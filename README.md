@@ -152,10 +152,10 @@ Back to *configuration.yaml* again on sensor templating add the code below. This
 Since you have card-mod and button-card lovelace frontend integrations installed you can create the button to show information about the washing machine on your dashboard. Remember that the styles like card size, position and others were made to fit my personal dashboard. Change it accordingly yours:
 
 ```yaml
-	type: custom:button-card
+        type: custom:button-card
         color_type: auto
         entity: input_select.state_washingmachine
-        name: Washing Machine
+        name: Lava Roupas
         show_state: true
         show_label: true
         label: >-
